@@ -1,8 +1,8 @@
 use bevy::{prelude::*, window::PresentMode};
 
-pub(crate) struct BevyConfig;
+pub(crate) struct BevyConfigPlugin;
 
-impl Plugin for BevyConfig {
+impl Plugin for BevyConfigPlugin {
     fn build(&self, app: &mut App) {
         let default_plugins = DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {

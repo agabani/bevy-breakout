@@ -15,6 +15,6 @@ lint:
 run:
   @cargo run
 
-# run dynamic
-run-dynamic:
-  @cargo run --features bevy/dynamic_linking
+# run dev
+run-dev:
+  @cargo run --features dev

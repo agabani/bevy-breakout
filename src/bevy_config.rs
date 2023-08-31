@@ -1,6 +1,6 @@
 use bevy::{prelude::*, window::PresentMode};
 
-pub struct BevyConfig;
+pub(crate) struct BevyConfig;
 
 impl Plugin for BevyConfig {
     fn build(&self, app: &mut App) {

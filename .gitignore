@@ -1,1 +1,5 @@
 /target
+
+/wasm/*
+!/wasm/favicon.ico
+!/wasm/index.html

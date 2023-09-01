@@ -12,7 +12,10 @@ impl Plugin for LevelPlugin {
             .add_systems(OnExit(GameState::Level), camera_teardown)
             // paddle
             .add_systems(OnEnter(GameState::Level), paddle_setup)
-            .add_systems(OnExit(GameState::Level), paddle_teardown);
+            .add_systems(OnExit(GameState::Level), paddle_teardown)
+            .add_systems(Update, paddle_movement.run_if(in_state(GameState::Level)))
+            // menu
+            .add_systems(Update, menu.run_if(in_state(GameState::Level)));
     }
 }
 
@@ -56,5 +59,25 @@ fn paddle_setup(mut commands: Commands) {
 fn paddle_teardown(mut commands: Commands, query: Query<Entity, With<Paddle>>) {
     if let Ok(entity) = query.get_single() {
         commands.entity(entity).despawn_recursive();
+    }
+}
+
+#[allow(clippy::needless_pass_by_value)]
+fn paddle_movement(input: Res<Input<KeyCode>>, mut query: Query<&mut Transform, With<Paddle>>) {
+    let mut transform = query.single_mut();
+
+    if input.pressed(KeyCode::Left) {
+        transform.translation.x -= 1.0;
+    }
+
+    if input.pressed(KeyCode::Right) {
+        transform.translation.x += 1.0;
+    }
+}
+
+#[allow(clippy::needless_pass_by_value)]
+fn menu(mut next_state: ResMut<NextState<GameState>>, input: Res<Input<KeyCode>>) {
+    if input.pressed(KeyCode::Escape) {
+        next_state.set(GameState::MainMenu);
     }
 }

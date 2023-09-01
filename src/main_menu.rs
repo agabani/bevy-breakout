@@ -14,9 +14,15 @@ impl Plugin for MainMenuPlugin {
             .add_systems(OnEnter(GameState::MainMenu), main_menu_setup)
             .add_systems(OnExit(GameState::MainMenu), main_menu_teardown)
             // play button
-            .add_systems(Update, play_button_interaction)
+            .add_systems(
+                Update,
+                play_button_interaction.run_if(in_state(GameState::MainMenu)),
+            )
             // quit button
-            .add_systems(Update, quit_button_interaction);
+            .add_systems(
+                Update,
+                quit_button_interaction.run_if(in_state(GameState::MainMenu)),
+            );
     }
 }
 
@@ -38,9 +44,8 @@ fn camera_setup(mut commands: Commands) {
 
 #[allow(clippy::needless_pass_by_value)]
 fn camera_teardown(mut commands: Commands, query: Query<Entity, With<Camera>>) {
-    if let Ok(entity) = query.get_single() {
-        commands.entity(entity).despawn_recursive();
-    }
+    let entity = query.single();
+    commands.entity(entity).despawn_recursive();
 }
 
 #[allow(clippy::needless_pass_by_value)]
@@ -139,9 +144,8 @@ fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 #[allow(clippy::needless_pass_by_value)]
 fn main_menu_teardown(mut commands: Commands, query: Query<Entity, With<MainMenu>>) {
-    if let Ok(entity) = query.get_single() {
-        commands.entity(entity).despawn_recursive();
-    }
+    let entity = query.single();
+    commands.entity(entity).despawn_recursive();
 }
 
 #[allow(clippy::needless_pass_by_value)]
@@ -155,8 +159,8 @@ fn play_button_interaction(
                 // TODO: change color
             }
             Interaction::Pressed => next_state.set(GameState::Level),
-        }
-    };
+        };
+    }
 }
 
 #[allow(clippy::needless_pass_by_value)]

@@ -13,6 +13,8 @@ impl Plugin for MainMenuPlugin {
             // main menu
             .add_systems(OnEnter(GameState::MainMenu), main_menu_setup)
             .add_systems(OnExit(GameState::MainMenu), main_menu_teardown)
+            // play button
+            .add_systems(Update, play_button_interaction)
             // quit button
             .add_systems(Update, quit_button_interaction);
     }
@@ -140,6 +142,21 @@ fn main_menu_teardown(mut commands: Commands, query: Query<Entity, With<MainMenu
     if let Ok(entity) = query.get_single() {
         commands.entity(entity).despawn_recursive();
     }
+}
+
+#[allow(clippy::needless_pass_by_value)]
+fn play_button_interaction(
+    mut next_state: ResMut<NextState<GameState>>,
+    query: Query<&Interaction, (Changed<Interaction>, With<PlayButton>)>,
+) {
+    if let Ok(interaction) = query.get_single() {
+        match interaction {
+            Interaction::Hovered | Interaction::None => {
+                // TODO: change color
+            }
+            Interaction::Pressed => next_state.set(GameState::Level),
+        }
+    };
 }
 
 #[allow(clippy::needless_pass_by_value)]

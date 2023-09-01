@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 use crate::GameState;
 
@@ -38,6 +39,14 @@ fn camera_teardown(mut commands: Commands, query: Query<Entity, With<Camera>>) {
 
 fn paddle_setup(mut commands: Commands) {
     commands.spawn((
+        // metadata
+        Name::new("Paddle"),
+        Paddle,
+        // physics
+        Collider::cuboid(0.5, 0.5),
+        KinematicCharacterController::default(),
+        RigidBody::KinematicPositionBased,
+        // sprite
         SpriteBundle {
             sprite: Sprite {
                 color: Color::rgb(1.0, 1.0, 1.0),
@@ -50,8 +59,6 @@ fn paddle_setup(mut commands: Commands) {
             },
             ..Default::default()
         },
-        Paddle,
-        Name::new("Paddle"),
     ));
 }
 
@@ -63,15 +70,18 @@ fn paddle_teardown(mut commands: Commands, query: Query<Entity, With<Paddle>>) {
 }
 
 #[allow(clippy::needless_pass_by_value)]
-fn paddle_movement(input: Res<Input<KeyCode>>, mut query: Query<&mut Transform, With<Paddle>>) {
-    let mut transform = query.single_mut();
+fn paddle_movement(
+    input: Res<Input<KeyCode>>,
+    mut query: Query<&mut KinematicCharacterController, With<Paddle>>,
+) {
+    let mut controller = query.single_mut();
 
     if input.pressed(KeyCode::Left) {
-        transform.translation.x -= 1.0;
+        controller.translation = Some(Vec2::new(-1.0, 0.0));
     }
 
     if input.pressed(KeyCode::Right) {
-        transform.translation.x += 1.0;
+        controller.translation = Some(Vec2::new(1.0, 0.0));
     }
 }
 

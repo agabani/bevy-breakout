@@ -12,11 +12,11 @@ pub(crate) fn movement(
     let mut controller = query.single_mut();
 
     if input.pressed(KeyCode::Left) {
-        controller.translation = Some(Vec2::new(-1.0, 0.0));
+        controller.translation = Some(Vec2::new(-5.0, 0.0));
     }
 
     if input.pressed(KeyCode::Right) {
-        controller.translation = Some(Vec2::new(1.0, 0.0));
+        controller.translation = Some(Vec2::new(5.0, 0.0));
     }
 }
 
@@ -36,7 +36,7 @@ pub(crate) fn setup(mut commands: Commands) {
                 ..Default::default()
             },
             transform: Transform {
-                translation: Vec3::new(0.0, 0.0, 0.0),
+                translation: Vec3::new(0.0, -240.0, 0.0),
                 scale: Vec3::new(120.0, 20.0, 0.0),
                 ..Default::default()
             },

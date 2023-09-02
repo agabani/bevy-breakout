@@ -2,5 +2,5 @@
   "files.associations": {
     "justfile": "makefile"
   },
-  "cSpell.words": ["despawn", "egui", "fira", "vsync"]
+  "cSpell.words": ["despawn", "egui", "fira", "vsync", "xyzw"]
 }

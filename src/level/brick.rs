@@ -5,7 +5,26 @@ use bevy_rapier2d::prelude::*;
 pub(crate) struct Brick;
 
 pub(crate) fn setup(mut commands: Commands) {
-    commands.spawn((
+    for row in 1..=3 {
+        for column in 1..=3 {
+            commands.spawn(brick(Vec3::new(
+                (120.0 + 40.0) * column as f32 - 300.0,
+                (20.0 + 40.0) * row as f32 + 0.0,
+                0.0,
+            )));
+        }
+    }
+}
+
+#[allow(clippy::needless_pass_by_value)]
+pub(crate) fn teardown(mut commands: Commands, query: Query<Entity, With<Brick>>) {
+    for entity in &query {
+        commands.entity(entity).despawn_recursive();
+    }
+}
+
+fn brick(translation: Vec3) -> impl Bundle {
+    (
         // metadata
         Name::new("Brick"),
         Brick,
@@ -20,18 +39,11 @@ pub(crate) fn setup(mut commands: Commands) {
                 ..Default::default()
             },
             transform: Transform {
-                translation: Vec3::new(0.0, 0.0, 0.0),
+                translation,
                 scale: Vec3::new(120.0, 20.0, 0.0),
                 ..Default::default()
             },
             ..Default::default()
         },
-    ));
-}
-
-#[allow(clippy::needless_pass_by_value)]
-pub(crate) fn teardown(mut commands: Commands, query: Query<Entity, With<Brick>>) {
-    for entity in &query {
-        commands.entity(entity).despawn_recursive();
-    }
+    )
 }

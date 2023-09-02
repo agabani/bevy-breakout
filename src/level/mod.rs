@@ -1,5 +1,6 @@
 pub(crate) mod brick;
 pub(crate) mod camera;
+pub(crate) mod map;
 pub(crate) mod menu;
 pub(crate) mod paddle;
 
@@ -13,11 +14,16 @@ impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             OnEnter(GameState::Level),
-            (brick::setup, camera::setup, paddle::setup),
+            (brick::setup, camera::setup, map::setup, paddle::setup),
         )
         .add_systems(
             OnExit(GameState::Level),
-            (brick::teardown, camera::teardown, paddle::teardown),
+            (
+                brick::teardown,
+                camera::teardown,
+                map::teardown,
+                paddle::teardown,
+            ),
         )
         .add_systems(
             Update,

@@ -40,6 +40,7 @@ fn brick(column: u32, row: u32) -> impl Bundle {
     )
 }
 
+#[allow(clippy::cast_precision_loss)]
 fn brick_transform(column: u32, row: u32) -> Transform {
     let columns = 4;
     let rows = 3;

@@ -54,3 +54,9 @@ pub(crate) fn teardown(mut commands: Commands, query: Query<Entity, With<Ball>>)
         commands.entity(entity).despawn_recursive();
     }
 }
+
+pub(crate) fn velocity(mut query: Query<&mut Velocity, With<Ball>>) {
+    for mut velocity in &mut query {
+        velocity.linvel = velocity.linvel.normalize() * 400.0;
+    }
+}

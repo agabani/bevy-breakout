@@ -4,12 +4,13 @@ use bevy_rapier2d::prelude::*;
 #[derive(Component)]
 pub(crate) struct Brick;
 
+#[allow(clippy::needless_pass_by_value)]
 pub(crate) fn collision(
     mut commands: Commands,
     mut collision_events: EventReader<CollisionEvent>,
     query: Query<Entity, With<Brick>>,
 ) {
-    for &collision_event in collision_events.iter() {
+    for &collision_event in &mut collision_events {
         if let CollisionEvent::Stopped(a, b, _) = collision_event {
             if let Ok(entity) = query.get(a) {
                 commands.entity(entity).despawn_recursive();

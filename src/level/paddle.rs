@@ -5,7 +5,7 @@ use bevy_rapier2d::prelude::*;
 pub(crate) struct Paddle;
 
 #[allow(clippy::needless_pass_by_value)]
-pub(crate) fn movement(
+pub(crate) fn movement_keyboard(
     input: Res<Input<KeyCode>>,
     mut query: Query<&mut KinematicCharacterController, With<Paddle>>,
 ) {
@@ -17,6 +17,26 @@ pub(crate) fn movement(
 
     if input.pressed(KeyCode::Right) {
         controller.translation = Some(Vec2::new(5.0, 0.0));
+    }
+}
+
+#[allow(clippy::needless_pass_by_value)]
+pub(crate) fn movement_touches(
+    touches: Res<Touches>,
+    mut query: Query<(&mut KinematicCharacterController, &Transform), With<Paddle>>,
+    window: Query<&Window>,
+) {
+    let (mut controller, transform) = query.single_mut();
+    let half_screen_width = window.single().resolution.width() / 2.0;
+
+    for finger in touches.iter() {
+        if finger.position().x - half_screen_width < transform.translation.x {
+            controller.translation = Some(Vec2::new(-5.0, 0.0));
+        }
+
+        if finger.position().x - half_screen_width > transform.translation.x {
+            controller.translation = Some(Vec2::new(5.0, 0.0));
+        }
     }
 }
 

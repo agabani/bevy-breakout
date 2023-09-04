@@ -39,7 +39,8 @@ impl Plugin for LevelPlugin {
                 ball::velocity,
                 brick::collision,
                 menu::escape,
-                paddle::movement,
+                paddle::movement_keyboard,
+                paddle::movement_touches,
             )
                 .run_if(in_state(GameState::Level)),
         );

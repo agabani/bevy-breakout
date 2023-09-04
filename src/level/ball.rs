@@ -14,7 +14,7 @@ pub(crate) fn setup(
         Name::new("Ball"),
         Ball,
         // physics
-        Collider::cuboid(0.5, 0.5),
+        Collider::ball(0.5),
         ColliderMassProperties::Mass(0.01),
         Damping {
             angular_damping: 0.0,
@@ -28,10 +28,6 @@ pub(crate) fn setup(
         },
         Velocity {
             linvel: Vect::new(0.0, 1.0).normalize() * 400.0,
-            ..Default::default()
-        },
-        Sleeping {
-            sleeping: false,
             ..Default::default()
         },
         // mesh

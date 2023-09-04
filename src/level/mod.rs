@@ -35,7 +35,13 @@ impl Plugin for LevelPlugin {
         )
         .add_systems(
             Update,
-            (ball::velocity, menu::escape, paddle::movement).run_if(in_state(GameState::Level)),
+            (
+                ball::velocity,
+                brick::collision,
+                menu::escape,
+                paddle::movement,
+            )
+                .run_if(in_state(GameState::Level)),
         );
     }
 }

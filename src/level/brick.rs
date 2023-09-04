@@ -4,6 +4,24 @@ use bevy_rapier2d::prelude::*;
 #[derive(Component)]
 pub(crate) struct Brick;
 
+pub(crate) fn collision(
+    mut commands: Commands,
+    mut collision_events: EventReader<CollisionEvent>,
+    query: Query<Entity, With<Brick>>,
+) {
+    for &collision_event in collision_events.iter() {
+        if let CollisionEvent::Stopped(a, b, _) = collision_event {
+            if let Ok(entity) = query.get(a) {
+                commands.entity(entity).despawn_recursive();
+            }
+
+            if let Ok(entity) = query.get(b) {
+                commands.entity(entity).despawn_recursive();
+            }
+        }
+    }
+}
+
 pub(crate) fn setup(mut commands: Commands) {
     for row in 0..3 {
         for column in 0..4 {
@@ -25,9 +43,10 @@ fn brick(column: u32, row: u32) -> impl Bundle {
         Name::new(format!("Brick x:{column} y:{row}")),
         Brick,
         // physics
+        ActiveEvents::COLLISION_EVENTS,
         Collider::cuboid(0.5, 0.5),
         GravityScale(0.0),
-        RigidBody::Dynamic,
+        RigidBody::Fixed,
         // sprite
         SpriteBundle {
             sprite: Sprite {

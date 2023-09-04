@@ -1,0 +1,38 @@
+name: "CD: Release"
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: "Configure: Git"
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: "Toolchain: just"
+        uses: extractions/setup-just@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Toolchain: Python"
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - name: "Toolchain: ghp-import"
+        run: pip3 install ghp-import
+      - name: "Toolchain: wasm"
+        run: just install-tools
+      - name: "Build"
+        run: just build-wasm
+      - name: Deploy
+        run: ghp-import wasm -p

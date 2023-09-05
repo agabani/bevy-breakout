@@ -37,7 +37,7 @@ impl Plugin for LevelPlugin {
             Update,
             (
                 ball::velocity,
-                brick::collision,
+                brick::collision_ball,
                 menu::escape,
                 paddle::movement_keyboard,
                 paddle::movement_touches,

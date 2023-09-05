@@ -1,23 +1,26 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
+use super::ball::Ball;
+
 #[derive(Component)]
 pub(crate) struct Brick;
 
 #[allow(clippy::needless_pass_by_value)]
-pub(crate) fn collision(
+pub(crate) fn collision_ball(
     mut commands: Commands,
     mut collision_events: EventReader<CollisionEvent>,
-    query: Query<Entity, With<Brick>>,
+    balls: Query<Entity, With<Ball>>,
+    bricks: Query<Entity, With<Brick>>,
 ) {
     for &collision_event in &mut collision_events {
         if let CollisionEvent::Stopped(a, b, _) = collision_event {
-            if let Ok(entity) = query.get(a) {
-                commands.entity(entity).despawn_recursive();
+            if let (Ok(_), Ok(brick)) = (balls.get(a), bricks.get(b)) {
+                commands.entity(brick).despawn_recursive();
             }
 
-            if let Ok(entity) = query.get(b) {
-                commands.entity(entity).despawn_recursive();
+            if let (Ok(_), Ok(brick)) = (balls.get(b), bricks.get(a)) {
+                commands.entity(brick).despawn_recursive();
             }
         }
     }

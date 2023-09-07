@@ -5,6 +5,7 @@ pub(crate) mod bevy_config;
 pub(crate) mod dev;
 pub(crate) mod level;
 pub(crate) mod main_menu;
+pub(crate) mod math;
 pub(crate) mod physics;
 
 use bevy::prelude::*;

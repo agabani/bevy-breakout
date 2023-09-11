@@ -12,6 +12,7 @@ pub(crate) struct Spec {
     pub(crate) padding_y: f32,
 }
 
+#[allow(unused)]
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct Transform {
     pub(crate) height: f32,
@@ -22,7 +23,7 @@ pub(crate) struct Transform {
 }
 
 impl Spec {
-    #[allow(clippy::cast_precision_loss)]
+    #[allow(clippy::cast_precision_loss, unused)]
     pub(crate) fn transform(self, column: u32, row: u32) -> Transform {
         let total_height = self.border_top - self.border_bottom;
         let total_width = self.border_right - self.border_left;

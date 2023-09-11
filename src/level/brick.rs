@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::math::brick::Spec;
+use crate::math::brick_circular::BrickCircular;
 
 use super::ball::Ball;
 
@@ -29,21 +29,19 @@ pub(crate) fn collision_ball(
 }
 
 pub(crate) fn setup(mut commands: Commands) {
-    let spec = Spec {
-        columns: 8,
-        rows: 6,
-        border_bottom: 000.0,
-        border_left: -290.0,
-        border_right: 290.0,
-        border_top: 290.0,
+    let spec = BrickCircular {
+        columns: 11,
+        rows: 5,
+        radius_max: 200.0,
+        radius_min: 50.0,
+        offset_x: 0.0,
+        offset_y: 100.0,
         padding_x: 8.0,
-        padding_y: 8.0,
+        padding_y: 4.0,
     };
 
     for row in 0..spec.rows {
         for column in 0..spec.columns {
-            let layout = spec.transform(column, row);
-
             commands.spawn((
                 // metadata
                 Name::new(format!("Brick x:{column} y:{row}")),
@@ -59,11 +57,7 @@ pub(crate) fn setup(mut commands: Commands) {
                         color: Color::rgb(0.8, 0.8, 0.8),
                         ..Default::default()
                     },
-                    transform: Transform {
-                        translation: Vec3::new(layout.x, layout.y, 0.0),
-                        scale: Vec3::new(layout.width, layout.height, 0.0),
-                        ..Default::default()
-                    },
+                    transform: spec.transform(column, row),
                     ..Default::default()
                 },
             ));

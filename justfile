@@ -14,9 +14,15 @@ build-wasm:
   @cp -r assets wasm
 
 # install tools
-install-tools:
+install-tools: install-tools-build install-tools-dev
+
+# install tools build
+install-tools-build:
   @rustup target add wasm32-unknown-unknown
   @cargo install wasm-bindgen-cli
+
+# install tools dev
+install-tools-dev:
   @cargo install basic-http-server
 
 # lint

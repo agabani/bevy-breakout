@@ -31,7 +31,7 @@ jobs:
       - name: "Toolchain: ghp-import"
         run: pip3 install ghp-import
       - name: "Toolchain: wasm"
-        run: just install-tools
+        run: just install-tools-build
       - name: "Build"
         run: just build-wasm
       - name: Deploy

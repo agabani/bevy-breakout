@@ -14,6 +14,7 @@ pub(crate) fn setup(
         Name::new("Ball"),
         Ball,
         // physics
+        Ccd::enabled(),
         Collider::ball(0.5),
         ColliderMassProperties::Mass(0.01),
         Damping {

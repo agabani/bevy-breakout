@@ -1,6 +1,7 @@
 pub(crate) mod ball;
 pub(crate) mod brick;
 pub(crate) mod camera;
+pub(crate) mod look;
 pub(crate) mod map;
 pub(crate) mod menu;
 pub(crate) mod paddle;
@@ -38,11 +39,16 @@ impl Plugin for LevelPlugin {
             (
                 ball::velocity,
                 brick::collision_ball,
+                look::at,
                 menu::escape,
                 paddle::movement_keyboard,
                 paddle::movement_touches,
             )
                 .run_if(in_state(GameState::Level)),
         );
+
+        #[cfg(feature = "dev")]
+        app.register_type::<look::LookAt>()
+            .register_type::<look::Looker>();
     }
 }

@@ -1,6 +1,7 @@
 {
+  "cSpell.words": ["consts", "despawn", "egui", "fira", "vsync", "xyzw"],
   "files.associations": {
     "justfile": "makefile"
   },
-  "cSpell.words": ["consts", "despawn", "egui", "fira", "vsync", "xyzw"]
+  "rust-analyzer.cargo.allFeatures": true
 }

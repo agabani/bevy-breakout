@@ -1,12 +1,16 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::physics::MIN_Z;
-
-use super::look::{LookAt, Looker};
+use crate::{
+    look_at::{LookAt, LookAtNormal},
+    physics::MIN_Z,
+};
 
 #[derive(Component)]
 pub(crate) struct Paddle;
+
+#[derive(Component)]
+pub(crate) struct PaddleLookAt;
 
 #[allow(clippy::needless_pass_by_value)]
 pub(crate) fn movement_keyboard(
@@ -45,12 +49,22 @@ pub(crate) fn movement_touches(
 }
 
 pub(crate) fn setup(mut commands: Commands) {
+    let entity = commands
+        .spawn((
+            Name::new("Paddle Look At"),
+            PaddleLookAt,
+            Transform::from_xyz(0., 0.0, 0.0),
+        ))
+        .id();
+
     commands.spawn((
         // metadata
         Name::new("Paddle"),
         Paddle,
-        LookAt::new(Vec3::ZERO),
-        Looker,
+        LookAt {
+            entity,
+            normal: LookAtNormal::Vec2(Vec2::Y),
+        },
         // physics
         Collider::cuboid(0.5, 0.5),
         KinematicCharacterController::default(),
@@ -72,8 +86,16 @@ pub(crate) fn setup(mut commands: Commands) {
 }
 
 #[allow(clippy::needless_pass_by_value)]
-pub(crate) fn teardown(mut commands: Commands, query: Query<Entity, With<Paddle>>) {
-    if let Ok(entity) = query.get_single() {
+pub(crate) fn teardown(
+    mut commands: Commands,
+    paddles: Query<Entity, With<Paddle>>,
+    paddle_look_ats: Query<Entity, With<PaddleLookAt>>,
+) {
+    if let Ok(entity) = paddles.get_single() {
+        commands.entity(entity).despawn_recursive();
+    }
+
+    if let Ok(entity) = paddle_look_ats.get_single() {
         commands.entity(entity).despawn_recursive();
     }
 }

@@ -1,17 +1,17 @@
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
-use bevy_breakout::look_at::{LookAt, LookAtNormal, LookAtPlugin};
+use bevy_breakout::{
+    orbit_controller::{OrbitController, OrbitControllerBundle, OrbitControllerPlugin},
+    physics::PhysicsPlugin,
+};
 #[cfg(feature = "dev")]
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
-
-#[derive(Component)]
-pub(crate) struct Actor;
+use bevy_rapier2d::prelude::*;
 
 fn main() {
     let mut app = App::new();
 
-    app.add_plugins((DefaultPlugins, LookAtPlugin))
-        .add_systems(Startup, setup)
-        .add_systems(Update, cursor_position);
+    app.add_plugins((DefaultPlugins, PhysicsPlugin, OrbitControllerPlugin))
+        .add_systems(Startup, setup);
 
     #[cfg(feature = "dev")]
     app.add_plugins(WorldInspectorPlugin::new());
@@ -26,9 +26,9 @@ fn setup(
 ) {
     commands.spawn(Camera2dBundle::default());
 
-    let id = commands
+    let entity = commands
         .spawn((
-            Name::new("Target"),
+            Name::new("Focal Point"),
             MaterialMesh2dBundle {
                 material: materials.add(ColorMaterial::from(Color::rgb(1.0, 0.5, 0.5))),
                 mesh: meshes.add(shape::Circle::default().into()).into(),
@@ -42,12 +42,15 @@ fn setup(
         .id();
 
     commands.spawn((
-        Name::new("Actor"),
-        Actor,
-        LookAt {
-            normal: LookAtNormal::Vec2(Vec2::Y),
-            entity: id,
-        },
+        Name::new("Controller"),
+        OrbitControllerBundle::new(
+            Collider::cuboid(0.5, 0.5),
+            KinematicCharacterController::default(),
+            OrbitController {
+                altitude: 200.0,
+                entity,
+            },
+        ),
         MaterialMesh2dBundle {
             material: materials.add(ColorMaterial::from(Color::rgb(1.0, 0.5, 0.5))),
             mesh: meshes.add(shape::Quad::default().into()).into(),
@@ -59,23 +62,4 @@ fn setup(
             ..Default::default()
         },
     ));
-}
-
-fn cursor_position(
-    windows: Query<&Window>,
-    cameras: Query<(&Camera, &GlobalTransform)>,
-    mut actor: Query<&mut Transform, With<Actor>>,
-) {
-    let mut actor = actor.single_mut();
-    let (camera, camera_transform) = cameras.single();
-    let window = windows.single();
-
-    let position = window
-        .cursor_position()
-        .and_then(|cursor| camera.viewport_to_world(camera_transform, cursor))
-        .map(|ray| ray.origin.truncate());
-
-    if let Some(position) = position {
-        actor.translation = position.extend(0.0);
-    }
 }

@@ -35,7 +35,7 @@ pub(crate) fn setup(mut commands: Commands) {
         radius_max: 200.0,
         radius_min: 50.0,
         offset_x: 0.0,
-        offset_y: 100.0,
+        offset_y: 0.0,
         padding_x: 8.0,
         padding_y: 4.0,
     };

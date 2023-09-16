@@ -5,10 +5,10 @@ use bevy_rapier2d::prelude::*;
 ///
 /// Any positive non 0 value will suffice.
 /// Using value 1.0 because it's probably an easy number for calculations.
-pub(crate) const MIN_Z: f32 = 1.0;
+pub const MIN_Z: f32 = 1.0;
 
 #[allow(clippy::module_name_repetitions)]
-pub(crate) struct PhysicsPlugin;
+pub struct PhysicsPlugin;
 
 impl Plugin for PhysicsPlugin {
     fn build(&self, app: &mut App) {

@@ -7,7 +7,8 @@ pub(crate) mod level;
 pub mod look_at;
 pub(crate) mod main_menu;
 pub(crate) mod math;
-pub(crate) mod physics;
+pub mod orbit_controller;
+pub mod physics;
 
 use bevy::prelude::*;
 
@@ -17,6 +18,7 @@ use dev::DevPlugin;
 use level::LevelPlugin;
 use look_at::LookAtPlugin;
 use main_menu::MainMenuPlugin;
+use orbit_controller::OrbitControllerPlugin;
 use physics::PhysicsPlugin;
 
 #[derive(Clone, Default, Debug, Eq, PartialEq, Hash, States)]
@@ -35,7 +37,8 @@ impl Plugin for GamePlugin {
             .add_plugins(LevelPlugin)
             .add_plugins(MainMenuPlugin)
             .add_plugins(PhysicsPlugin)
-            .add_plugins(LookAtPlugin);
+            .add_plugins(LookAtPlugin)
+            .add_plugins(OrbitControllerPlugin);
         #[cfg(feature = "dev")]
         app.add_plugins(DevPlugin);
     }

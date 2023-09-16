@@ -4,6 +4,7 @@ pub(crate) mod bevy_config;
 #[cfg(feature = "dev")]
 pub(crate) mod dev;
 pub(crate) mod level;
+pub mod look_at;
 pub(crate) mod main_menu;
 pub(crate) mod math;
 pub(crate) mod physics;
@@ -14,6 +15,7 @@ use bevy_config::BevyConfigPlugin;
 #[cfg(feature = "dev")]
 use dev::DevPlugin;
 use level::LevelPlugin;
+use look_at::LookAtPlugin;
 use main_menu::MainMenuPlugin;
 use physics::PhysicsPlugin;
 
@@ -32,7 +34,8 @@ impl Plugin for GamePlugin {
             .add_plugins(BevyConfigPlugin)
             .add_plugins(LevelPlugin)
             .add_plugins(MainMenuPlugin)
-            .add_plugins(PhysicsPlugin);
+            .add_plugins(PhysicsPlugin)
+            .add_plugins(LookAtPlugin);
         #[cfg(feature = "dev")]
         app.add_plugins(DevPlugin);
     }

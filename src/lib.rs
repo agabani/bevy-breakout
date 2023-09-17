@@ -1,25 +1,15 @@
 #![warn(clippy::pedantic)]
 
-pub(crate) mod bevy_config;
-#[cfg(feature = "dev")]
-pub(crate) mod dev;
 pub(crate) mod level;
-pub mod look_at;
 pub(crate) mod main_menu;
 pub(crate) mod math;
-pub mod orbit_controller;
-pub mod physics;
+pub mod plugins;
 
 use bevy::prelude::*;
 
-use bevy_config::BevyConfigPlugin;
-#[cfg(feature = "dev")]
-use dev::DevPlugin;
+use crate::prelude::*;
 use level::LevelPlugin;
-use look_at::LookAtPlugin;
 use main_menu::MainMenuPlugin;
-use orbit_controller::OrbitControllerPlugin;
-use physics::PhysicsPlugin;
 
 #[derive(Clone, Default, Debug, Eq, PartialEq, Hash, States)]
 enum GameState {
@@ -33,7 +23,7 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<GameState>()
-            .add_plugins(BevyConfigPlugin)
+            .add_plugins(BevyPlugin)
             .add_plugins(LevelPlugin)
             .add_plugins(MainMenuPlugin)
             .add_plugins(PhysicsPlugin)
@@ -42,4 +32,10 @@ impl Plugin for GamePlugin {
         #[cfg(feature = "dev")]
         app.add_plugins(DevPlugin);
     }
+}
+
+pub mod prelude {
+    #[cfg(feature = "dev")]
+    pub use crate::plugins::dev::*;
+    pub use crate::plugins::{bevy::*, look_at::*, orbit_controller::*, physics::*};
 }

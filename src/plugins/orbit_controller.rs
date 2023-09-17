@@ -63,7 +63,6 @@ fn touch(
     transforms: Query<&Transform>,
     window: Query<&Window>,
 ) {
-    // let (mut controller, transform) = query.single_mut();
     let half_screen_width = window.single().resolution.width() / 2.0;
 
     let mut left = false;

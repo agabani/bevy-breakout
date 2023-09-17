@@ -1,5 +1,5 @@
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
-use bevy_breakout::look_at::{LookAt, LookAtNormal, LookAtPlugin};
+use bevy_breakout::prelude::*;
 #[cfg(feature = "dev")]
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 

@@ -1,8 +1,5 @@
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
-use bevy_breakout::{
-    orbit_controller::{OrbitController, OrbitControllerBundle, OrbitControllerPlugin},
-    physics::PhysicsPlugin,
-};
+use bevy_breakout::prelude::*;
 #[cfg(feature = "dev")]
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier2d::prelude::*;

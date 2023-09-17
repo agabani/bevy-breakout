@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 
 use bevy::prelude::*;
 
-use crate::physics::MIN_Z;
+use crate::prelude::*;
 
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct BrickCircular {
@@ -42,7 +42,7 @@ impl BrickCircular {
             scale: Vec3::new(
                 width - 2.0 * self.padding_x,
                 height - 2.0 * self.padding_y,
-                MIN_Z,
+                PHYSICS_MIN_Z,
             ),
             translation: Vec3::new(x + self.offset_x, y + self.offset_y, 0.0),
         }

@@ -1,11 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{
-    look_at::{LookAt, LookAtNormal},
-    orbit_controller::{OrbitController, OrbitControllerBundle},
-    physics::MIN_Z,
-};
+use crate::prelude::*;
 
 #[derive(Component)]
 pub(crate) struct Paddle;
@@ -47,7 +43,7 @@ pub(crate) fn setup(mut commands: Commands) {
             },
             transform: Transform {
                 translation: Vec3::new(0.0, -240.0, 0.0),
-                scale: Vec3::new(120.0, 20.0, MIN_Z),
+                scale: Vec3::new(120.0, 20.0, PHYSICS_MIN_Z),
                 ..Default::default()
             },
             ..Default::default()

@@ -40,3 +40,7 @@ run-dev:
 # run wasm
 run-wasm:
   @basic-http-server wasm
+
+# test
+test:
+  @cargo test

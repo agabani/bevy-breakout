@@ -1,7 +1,7 @@
 use bevy::{diagnostic::*, prelude::*};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-pub(crate) struct DevPlugin;
+pub struct DevPlugin;
 
 impl Plugin for DevPlugin {
     fn build(&self, app: &mut App) {

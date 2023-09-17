@@ -1,7 +1,5 @@
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use bevy_breakout::prelude::*;
-#[cfg(feature = "dev")]
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 #[derive(Component)]
 pub(crate) struct Actor;
@@ -14,7 +12,7 @@ fn main() {
         .add_systems(Update, cursor_position);
 
     #[cfg(feature = "dev")]
-    app.add_plugins(WorldInspectorPlugin::new());
+    app.add_plugins(DevPlugin);
 
     app.run();
 }

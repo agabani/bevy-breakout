@@ -37,7 +37,7 @@ pub(crate) fn setup(
             mesh: meshes.add(shape::Circle::default().into()).into(),
             transform: Transform {
                 scale: Vec3::new(30.0, 30.0, 0.0),
-                translation: Vec3::new(0.0, -100.0, 0.0),
+                translation: Vec3::new(0.0, -220.0, 0.0),
                 ..Default::default()
             },
             ..Default::default()

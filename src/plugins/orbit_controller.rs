@@ -3,6 +3,7 @@ use std::f32::consts::PI;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
+#[allow(clippy::module_name_repetitions)]
 pub struct OrbitControllerPlugin;
 
 impl Plugin for OrbitControllerPlugin {
@@ -21,6 +22,7 @@ pub struct OrbitController {
     pub entity: Entity,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Bundle)]
 pub struct OrbitControllerBundle {
     collider: Collider,
@@ -30,6 +32,7 @@ pub struct OrbitControllerBundle {
 }
 
 impl OrbitControllerBundle {
+    #[must_use]
     pub fn new(
         collider: Collider,
         kinematic_character_controller: KinematicCharacterController,
@@ -44,6 +47,7 @@ impl OrbitControllerBundle {
     }
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn keyboard(
     input: Res<Input<KeyCode>>,
     query: Query<(Entity, &mut KinematicCharacterController, &OrbitController)>,
@@ -57,6 +61,7 @@ fn keyboard(
     );
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn touch(
     touches: Res<Touches>,
     query: Query<(Entity, &mut KinematicCharacterController, &OrbitController)>,
@@ -80,6 +85,7 @@ fn touch(
     translation(left, right, query, transforms);
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn translation(
     left: bool,
     right: bool,

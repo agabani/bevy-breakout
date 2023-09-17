@@ -1,10 +1,11 @@
 use bevy::{prelude::*, window::PresentMode};
 
-pub(crate) struct BevyPlugin;
+#[allow(clippy::module_name_repetitions)]
+pub struct BevyDefaultPlugin;
 
-impl Plugin for BevyPlugin {
+impl Plugin for BevyDefaultPlugin {
     fn build(&self, app: &mut App) {
-        let default_plugins = DefaultPlugins.set(WindowPlugin {
+        app.add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 present_mode: PresentMode::AutoVsync,
                 resolution: (800.0, 600.0).into(),
@@ -12,8 +13,15 @@ impl Plugin for BevyPlugin {
                 ..Default::default()
             }),
             ..Default::default()
-        });
+        }));
+    }
+}
 
-        app.add_plugins(default_plugins);
+#[allow(clippy::module_name_repetitions)]
+pub struct BevyMinimalPlugin;
+
+impl Plugin for BevyMinimalPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_plugins(MinimalPlugins);
     }
 }

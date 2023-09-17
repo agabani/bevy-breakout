@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+#[allow(clippy::module_name_repetitions)]
 pub struct LookAtPlugin;
 
 impl Plugin for LookAtPlugin {
@@ -11,6 +12,7 @@ impl Plugin for LookAtPlugin {
     }
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Component)]
 #[cfg_attr(feature = "dev", derive(Reflect))]
 pub struct LookAt {
@@ -18,11 +20,13 @@ pub struct LookAt {
     pub normal: LookAtNormal,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[cfg_attr(feature = "dev", derive(Reflect))]
 pub enum LookAtNormal {
     Vec2(Vec2),
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn look_at(
     mut transforms: Query<&mut Transform>,
     entities: Query<(Entity, &LookAt), With<Transform>>,
@@ -52,12 +56,14 @@ mod tests {
 
     use bevy::prelude::*;
 
+    use crate::prelude::*;
+
     #[test]
     fn look_at() {
         // Arrange
         let mut app = App::new();
 
-        app.add_plugins((MinimalPlugins, super::LookAtPlugin));
+        app.add_plugins((BevyMinimalPlugin, LookAtPlugin));
 
         let entity = app.world.spawn(Transform::from_xyz(0.0, 0.0, 0.0)).id();
 
@@ -93,9 +99,9 @@ mod tests {
                 .world
                 .spawn((
                     transform,
-                    super::LookAt {
+                    LookAt {
                         entity,
-                        normal: super::LookAtNormal::Vec2(Vec2::Y),
+                        normal: LookAtNormal::Vec2(Vec2::Y),
                     },
                 ))
                 .id();

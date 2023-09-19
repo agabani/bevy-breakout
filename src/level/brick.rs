@@ -27,6 +27,7 @@ pub(crate) fn setup(mut commands: Commands) {
                 Brick,
                 CollidableBundle::new(Collider::cuboid(0.5, 0.5)),
                 DestructibleBundle::new(),
+                ScorableBundle::new(),
                 // physics
                 GravityScale(0.0),
                 RigidBody::Fixed,

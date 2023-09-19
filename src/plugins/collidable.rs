@@ -5,6 +5,7 @@ use bevy_rapier2d::prelude::*;
 pub struct CollidablePlugin;
 
 impl Plugin for CollidablePlugin {
+    #[allow(unused_variables)]
     fn build(&self, app: &mut App) {
         #[cfg(feature = "dev")]
         app.register_type::<Collidable>();
@@ -24,6 +25,7 @@ pub struct CollidableBundle {
 }
 
 impl CollidableBundle {
+    #[must_use]
     pub fn new(collider: Collider) -> Self {
         Self {
             active_events: ActiveEvents::COLLISION_EVENTS,

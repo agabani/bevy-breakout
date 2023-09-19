@@ -2,31 +2,10 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::math::brick_circular::BrickCircular;
-
-use super::ball::Ball;
+use crate::prelude::*;
 
 #[derive(Component)]
 pub(crate) struct Brick;
-
-#[allow(clippy::needless_pass_by_value)]
-pub(crate) fn collision_ball(
-    mut commands: Commands,
-    mut collision_events: EventReader<CollisionEvent>,
-    balls: Query<Entity, With<Ball>>,
-    bricks: Query<Entity, With<Brick>>,
-) {
-    for &collision_event in &mut collision_events {
-        if let CollisionEvent::Stopped(a, b, _) = collision_event {
-            if let (Ok(_), Ok(brick)) = (balls.get(a), bricks.get(b)) {
-                commands.entity(brick).despawn_recursive();
-            }
-
-            if let (Ok(_), Ok(brick)) = (balls.get(b), bricks.get(a)) {
-                commands.entity(brick).despawn_recursive();
-            }
-        }
-    }
-}
 
 pub(crate) fn setup(mut commands: Commands) {
     let spec = BrickCircular {
@@ -46,8 +25,8 @@ pub(crate) fn setup(mut commands: Commands) {
                 // metadata
                 Name::new(format!("Brick x:{column} y:{row}")),
                 Brick,
+                DestructibleBundle::new(),
                 // physics
-                ActiveEvents::COLLISION_EVENTS,
                 Collider::cuboid(0.5, 0.5),
                 GravityScale(0.0),
                 RigidBody::Fixed,

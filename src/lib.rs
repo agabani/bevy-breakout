@@ -8,7 +8,9 @@ pub mod plugins;
 use bevy::prelude::*;
 
 pub mod prelude {
-    pub use crate::plugins::{bevy::*, look_at::*, orbit_controller::*, physics::*};
+    pub use crate::plugins::{
+        bevy::*, destructible::*, look_at::*, orbit_controller::*, physics::*,
+    };
 
     #[cfg(feature = "dev")]
     pub use crate::plugins::dev::*;
@@ -31,12 +33,14 @@ impl Plugin for GamePlugin {
         use main_menu::MainMenuPlugin;
 
         app.add_state::<GameState>()
-            .add_plugins(BevyDefaultPlugin)
-            .add_plugins(LevelPlugin)
-            .add_plugins(MainMenuPlugin)
-            .add_plugins(PhysicsPlugin)
-            .add_plugins(LookAtPlugin)
-            .add_plugins(OrbitControllerPlugin);
+            .add_plugins((
+                BevyDefaultPlugin,
+                DestructiblePlugin,
+                LookAtPlugin,
+                OrbitControllerPlugin,
+                PhysicsPlugin,
+            ))
+            .add_plugins((LevelPlugin, MainMenuPlugin));
 
         #[cfg(feature = "dev")]
         app.add_plugins(DevPlugin);

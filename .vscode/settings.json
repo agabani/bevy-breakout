@@ -1,5 +1,13 @@
 {
-  "cSpell.words": ["consts", "despawn", "egui", "fira", "vsync", "xyzw"],
+  "cSpell.words": [
+    "collidable",
+    "consts",
+    "despawn",
+    "egui",
+    "fira",
+    "vsync",
+    "xyzw"
+  ],
   "files.associations": {
     "justfile": "makefile"
   },

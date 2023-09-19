@@ -25,9 +25,9 @@ pub(crate) fn setup(mut commands: Commands) {
                 // metadata
                 Name::new(format!("Brick x:{column} y:{row}")),
                 Brick,
+                CollidableBundle::new(Collider::cuboid(0.5, 0.5)),
                 DestructibleBundle::new(),
                 // physics
-                Collider::cuboid(0.5, 0.5),
                 GravityScale(0.0),
                 RigidBody::Fixed,
                 // sprite

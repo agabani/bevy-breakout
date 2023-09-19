@@ -1,12 +1,17 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
+use crate::prelude::*;
+
 #[allow(clippy::module_name_repetitions)]
 pub struct DestructiblePlugin;
 
 impl Plugin for DestructiblePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, despawn_entity_on_collision);
+
+        #[cfg(feature = "dev")]
+        app.register_type::<Destructible>();
     }
 }
 
@@ -17,7 +22,6 @@ pub struct Destructible;
 #[allow(clippy::module_name_repetitions)]
 #[derive(Bundle)]
 pub struct DestructibleBundle {
-    active_events: ActiveEvents,
     destructible: Destructible,
 }
 
@@ -25,7 +29,6 @@ impl DestructibleBundle {
     #[must_use]
     pub fn new() -> DestructibleBundle {
         DestructibleBundle {
-            active_events: ActiveEvents::COLLISION_EVENTS,
             destructible: Destructible,
         }
     }
@@ -40,7 +43,7 @@ impl Default for DestructibleBundle {
 #[allow(clippy::needless_pass_by_value)]
 fn despawn_entity_on_collision(
     mut commands: Commands,
-    mut events: EventReader<CollisionEvent>,
+    mut events: CollisionEvents,
     query: Query<Entity, With<Destructible>>,
 ) {
     for event in &mut events {

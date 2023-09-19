@@ -1,6 +1,8 @@
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use bevy_rapier2d::prelude::*;
 
+use crate::prelude::*;
+
 #[derive(Component)]
 pub(crate) struct Ball;
 
@@ -13,9 +15,9 @@ pub(crate) fn setup(
         // metadata
         Name::new("Ball"),
         Ball,
+        CollidableBundle::new(Collider::ball(0.5)),
         // physics
         Ccd::enabled(),
-        Collider::ball(0.5),
         ColliderMassProperties::Mass(0.01),
         Damping {
             angular_damping: 0.0,

@@ -1,4 +1,5 @@
 pub mod bevy;
+pub mod collidable;
 pub mod destructible;
 #[cfg(feature = "dev")]
 pub mod dev;

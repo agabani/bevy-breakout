@@ -9,7 +9,7 @@ use bevy::prelude::*;
 
 pub mod prelude {
     pub use crate::plugins::{
-        bevy::*, destructible::*, look_at::*, orbit_controller::*, physics::*,
+        bevy::*, collidable::*, destructible::*, look_at::*, orbit_controller::*, physics::*,
     };
 
     #[cfg(feature = "dev")]

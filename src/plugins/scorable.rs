@@ -48,6 +48,17 @@ pub struct Score {
     value: usize,
 }
 
+impl Score {
+    pub fn reset(&mut self) {
+        self.value = 0;
+    }
+
+    #[must_use]
+    pub fn value(&self) -> usize {
+        self.value
+    }
+}
+
 #[allow(clippy::needless_pass_by_value)]
 fn increase_score_on_collision(
     mut score: ResMut<Score>,

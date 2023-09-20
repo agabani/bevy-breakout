@@ -4,10 +4,11 @@ pub(crate) mod camera;
 pub(crate) mod map;
 pub(crate) mod menu;
 pub(crate) mod paddle;
+pub(crate) mod scoreboard;
 
 use bevy::prelude::*;
 
-use crate::GameState;
+use crate::{prelude::*, GameState};
 
 pub(crate) struct LevelPlugin;
 
@@ -21,6 +22,8 @@ impl Plugin for LevelPlugin {
                 camera::setup,
                 map::setup,
                 paddle::setup,
+                scoreboard::setup,
+                reset_score,
             ),
         )
         .add_systems(
@@ -31,8 +34,16 @@ impl Plugin for LevelPlugin {
                 camera::teardown,
                 map::teardown,
                 paddle::teardown,
+                scoreboard::teardown,
             ),
         )
-        .add_systems(Update, (menu::escape).run_if(in_state(GameState::Level)));
+        .add_systems(
+            Update,
+            (menu::escape, scoreboard::update).run_if(in_state(GameState::Level)),
+        );
     }
+}
+
+fn reset_score(mut resource: ResMut<Score>) {
+    resource.reset();
 }

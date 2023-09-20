@@ -29,10 +29,7 @@ pub(crate) fn setup(
             coefficient: 1.0,
             combine_rule: CoefficientCombineRule::Max,
         },
-        Velocity {
-            linvel: Vect::new(0.0, 1.0).normalize() * 400.0,
-            ..Default::default()
-        },
+        VelocitizedBundle::new(400.0, Vec2::Y),
         // mesh
         MaterialMesh2dBundle {
             material: materials.add(ColorMaterial::from(Color::rgb(1.0, 0.5, 0.5))),
@@ -51,11 +48,5 @@ pub(crate) fn setup(
 pub(crate) fn teardown(mut commands: Commands, query: Query<Entity, With<Ball>>) {
     for entity in &query {
         commands.entity(entity).despawn_recursive();
-    }
-}
-
-pub(crate) fn velocity(mut query: Query<&mut Velocity, With<Ball>>) {
-    for mut velocity in &mut query {
-        velocity.linvel = velocity.linvel.normalize() * 400.0;
     }
 }

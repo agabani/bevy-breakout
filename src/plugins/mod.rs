@@ -7,3 +7,4 @@ pub mod look_at;
 pub mod orbit_controller;
 pub mod physics;
 pub mod scorable;
+pub mod velocitized;

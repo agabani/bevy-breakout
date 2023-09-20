@@ -10,7 +10,7 @@ use bevy::prelude::*;
 pub mod prelude {
     pub use crate::plugins::{
         bevy::*, collidable::*, destructible::*, look_at::*, orbit_controller::*, physics::*,
-        scorable::*,
+        scorable::*, velocitized::*,
     };
 
     #[cfg(feature = "dev")]
@@ -41,6 +41,7 @@ impl Plugin for GamePlugin {
                 OrbitControllerPlugin,
                 PhysicsPlugin,
                 ScorablePlugin,
+                VelocitizedPlugin,
             ))
             .add_plugins((LevelPlugin, MainMenuPlugin));
 

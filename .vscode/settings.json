@@ -5,7 +5,9 @@
     "despawn",
     "egui",
     "fira",
+    "linvel",
     "scorable",
+    "velocitized",
     "vsync",
     "xyzw"
   ],

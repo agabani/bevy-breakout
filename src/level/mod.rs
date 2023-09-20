@@ -33,9 +33,6 @@ impl Plugin for LevelPlugin {
                 paddle::teardown,
             ),
         )
-        .add_systems(
-            Update,
-            (ball::velocity, menu::escape).run_if(in_state(GameState::Level)),
-        );
+        .add_systems(Update, (menu::escape).run_if(in_state(GameState::Level)));
     }
 }

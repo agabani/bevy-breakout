@@ -1,5 +1,3 @@
-use std::f32::consts::PI;
-
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
@@ -20,6 +18,8 @@ impl Plugin for OrbitControllerPlugin {
 pub struct OrbitController {
     pub altitude: f32,
     pub entity: Entity,
+    pub max_linear_speed: f32,
+    pub rotational_speed: f32,
 }
 
 #[allow(clippy::module_name_repetitions)]
@@ -33,14 +33,10 @@ pub struct OrbitControllerBundle {
 
 impl OrbitControllerBundle {
     #[must_use]
-    pub fn new(
-        collider: Collider,
-        kinematic_character_controller: KinematicCharacterController,
-        orbit_controller: OrbitController,
-    ) -> Self {
+    pub fn new(collider: Collider, orbit_controller: OrbitController) -> Self {
         Self {
             collider,
-            kinematic_character_controller,
+            kinematic_character_controller: KinematicCharacterController::default(),
             orbit_controller,
             rigid_body: RigidBody::KinematicPositionBased,
         }
@@ -107,10 +103,10 @@ fn translation(
         let mut rotate_by = 0.0;
 
         if left {
-            rotate_by += PI / 64.0;
+            rotate_by += orbit.rotational_speed;
         }
         if right {
-            rotate_by -= PI / 64.0;
+            rotate_by -= orbit.rotational_speed;
         }
 
         let target_angle = source_angle + rotate_by;
@@ -118,7 +114,8 @@ fn translation(
 
         let target = target_direction * orbit.altitude + center.translation.truncate();
 
-        let translation = (target - source.translation.truncate()).clamp_length_max(24.0);
+        let translation =
+            (target - source.translation.truncate()).clamp_length_max(orbit.max_linear_speed);
 
         if translation.length() > 0.01 {
             controller.translation = Some(translation);

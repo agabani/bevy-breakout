@@ -2,11 +2,15 @@ use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use bevy_breakout::prelude::*;
 use bevy_rapier2d::prelude::*;
 
+#[derive(Component)]
+pub(crate) struct FocalPoint;
+
 fn main() {
     let mut app = App::new();
 
     app.add_plugins((DefaultPlugins, PhysicsPlugin, OrbitControllerPlugin))
-        .add_systems(Startup, setup);
+        .add_systems(Startup, setup)
+        .add_systems(Update, cursor_position);
 
     #[cfg(feature = "dev")]
     app.add_plugins(DevPlugin);
@@ -24,6 +28,7 @@ fn setup(
     let entity = commands
         .spawn((
             Name::new("Focal Point"),
+            FocalPoint,
             MaterialMesh2dBundle {
                 material: materials.add(ColorMaterial::from(Color::rgb(1.0, 0.5, 0.5))),
                 mesh: meshes.add(shape::Circle::default().into()).into(),
@@ -40,10 +45,11 @@ fn setup(
         Name::new("Controller"),
         OrbitControllerBundle::new(
             Collider::cuboid(0.5, 0.5),
-            KinematicCharacterController::default(),
             OrbitController {
                 altitude: 200.0,
                 entity,
+                max_linear_speed: 24.0,
+                rotational_speed: std::f32::consts::PI / 64.0,
             },
         ),
         MaterialMesh2dBundle {
@@ -57,4 +63,23 @@ fn setup(
             ..Default::default()
         },
     ));
+}
+
+fn cursor_position(
+    windows: Query<&Window>,
+    cameras: Query<(&Camera, &GlobalTransform)>,
+    mut actor: Query<&mut Transform, With<FocalPoint>>,
+) {
+    let mut actor = actor.single_mut();
+    let (camera, camera_transform) = cameras.single();
+    let window = windows.single();
+
+    let position = window
+        .cursor_position()
+        .and_then(|cursor| camera.viewport_to_world(camera_transform, cursor))
+        .map(|ray| ray.origin.truncate());
+
+    if let Some(position) = position {
+        actor.translation = position.extend(0.0);
+    }
 }

@@ -29,10 +29,11 @@ pub(crate) fn setup(mut commands: Commands) {
         // physics
         OrbitControllerBundle::new(
             Collider::cuboid(0.5, 0.5),
-            KinematicCharacterController::default(),
             OrbitController {
                 altitude: 250.0,
                 entity,
+                max_linear_speed: 24.0,
+                rotational_speed: std::f32::consts::PI / 64.0,
             },
         ),
         // sprite

@@ -1,52 +1,34 @@
-use bevy::{app::AppExit, prelude::*};
+mod camera;
+mod play_button;
+mod quit_button;
+
+use bevy::prelude::*;
 
 use crate::GameState;
 
-pub(crate) struct MainMenuPlugin;
+#[allow(clippy::module_name_repetitions)]
+pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app
-            // camera
-            .add_systems(OnEnter(GameState::MainMenu), camera_setup)
-            .add_systems(OnExit(GameState::MainMenu), camera_teardown)
-            // main menu
-            .add_systems(OnEnter(GameState::MainMenu), main_menu_setup)
-            .add_systems(OnExit(GameState::MainMenu), main_menu_teardown)
-            // play button
-            .add_systems(
-                Update,
-                play_button_interaction.run_if(in_state(GameState::MainMenu)),
-            )
-            // quit button
-            .add_systems(
-                Update,
-                quit_button_interaction.run_if(in_state(GameState::MainMenu)),
-            );
+        app.add_systems(
+            OnEnter(GameState::MainMenu),
+            (camera::setup, main_menu_setup),
+        )
+        .add_systems(
+            OnExit(GameState::MainMenu),
+            (camera::teardown, main_menu_teardown),
+        )
+        .add_systems(
+            Update,
+            (play_button::interaction, quit_button::interaction)
+                .run_if(in_state(GameState::MainMenu)),
+        );
     }
 }
 
 #[derive(Component)]
-pub struct Camera {}
-
-#[derive(Component)]
 pub struct MainMenu {}
-
-#[derive(Component)]
-pub struct PlayButton {}
-
-#[derive(Component)]
-pub struct QuitButton {}
-
-fn camera_setup(mut commands: Commands) {
-    commands.spawn((Camera2dBundle::default(), Camera {}, Name::new("Camera")));
-}
-
-#[allow(clippy::needless_pass_by_value)]
-fn camera_teardown(mut commands: Commands, query: Query<Entity, With<Camera>>) {
-    let entity = query.single();
-    commands.entity(entity).despawn_recursive();
-}
 
 #[allow(clippy::needless_pass_by_value)]
 fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
@@ -85,7 +67,7 @@ fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                         background_color: Color::rgb(0.3, 0.3, 0.3).into(),
                         ..Default::default()
                     },
-                    PlayButton {},
+                    play_button::PlayButton {},
                     Name::new("Play Button"),
                 ))
                 .with_children(|parent| {
@@ -119,7 +101,7 @@ fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                         background_color: Color::rgb(0.3, 0.3, 0.3).into(),
                         ..Default::default()
                     },
-                    QuitButton {},
+                    quit_button::QuitButton {},
                     Name::new("Quit Button"),
                 ))
                 .with_children(|parent| {
@@ -146,34 +128,4 @@ fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 fn main_menu_teardown(mut commands: Commands, query: Query<Entity, With<MainMenu>>) {
     let entity = query.single();
     commands.entity(entity).despawn_recursive();
-}
-
-#[allow(clippy::needless_pass_by_value)]
-fn play_button_interaction(
-    mut next_state: ResMut<NextState<GameState>>,
-    query: Query<&Interaction, (Changed<Interaction>, With<PlayButton>)>,
-) {
-    if let Ok(interaction) = query.get_single() {
-        match interaction {
-            Interaction::Hovered | Interaction::None => {
-                // TODO: change color
-            }
-            Interaction::Pressed => next_state.set(GameState::Level),
-        };
-    }
-}
-
-#[allow(clippy::needless_pass_by_value)]
-fn quit_button_interaction(
-    mut event_writer: EventWriter<AppExit>,
-    query: Query<&Interaction, (Changed<Interaction>, With<QuitButton>)>,
-) {
-    if let Ok(interaction) = query.get_single() {
-        match interaction {
-            Interaction::Hovered | Interaction::None => {
-                // TODO: change color
-            }
-            Interaction::Pressed => event_writer.send(AppExit),
-        }
-    };
 }

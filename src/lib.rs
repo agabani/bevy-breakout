@@ -18,7 +18,7 @@ pub mod prelude {
 }
 
 #[derive(Clone, Default, Debug, Eq, PartialEq, Hash, States)]
-enum GameState {
+pub enum GameState {
     #[default]
     MainMenu,
     Level,

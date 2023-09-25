@@ -8,12 +8,9 @@ pub fn interaction(
     mut event_writer: EventWriter<AppExit>,
     query: Query<&Interaction, (Changed<Interaction>, With<QuitButton>)>,
 ) {
-    if let Ok(interaction) = query.get_single() {
-        match interaction {
-            Interaction::Hovered | Interaction::None => {
-                // TODO: change color
-            }
-            Interaction::Pressed => event_writer.send(AppExit),
+    for &interaction in &query {
+        if interaction == Interaction::Pressed {
+            event_writer.send(AppExit);
         }
-    };
+    }
 }

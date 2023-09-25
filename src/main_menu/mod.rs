@@ -56,70 +56,22 @@ fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         .with_children(|parent| {
             parent
                 .spawn((
-                    ButtonBundle {
-                        style: Style {
-                            height: Val::Px(80.0),
-                            width: Val::Px(200.0),
-                            align_items: AlignItems::Center,
-                            justify_content: JustifyContent::Center,
-                            ..Default::default()
-                        },
-                        background_color: Color::rgb(0.3, 0.3, 0.3).into(),
-                        ..Default::default()
-                    },
+                    crate::plugins::button::ButtonBundle::new(),
                     play_button::PlayButton {},
                     Name::new("Play Button"),
                 ))
                 .with_children(|parent| {
-                    parent.spawn(TextBundle {
-                        text: Text {
-                            alignment: TextAlignment::Center,
-                            sections: vec![TextSection::new(
-                                "Play",
-                                TextStyle {
-                                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                                    font_size: 32.0,
-                                    color: Color::rgb(1.0, 1.0, 1.0),
-                                },
-                            )],
-                            ..Default::default()
-                        },
-                        ..Default::default()
-                    });
+                    parent.spawn(crate::plugins::text::TextBundle::new(&asset_server, "Play"));
                 });
 
             parent
                 .spawn((
-                    ButtonBundle {
-                        style: Style {
-                            height: Val::Px(80.0),
-                            width: Val::Px(200.0),
-                            align_items: AlignItems::Center,
-                            justify_content: JustifyContent::Center,
-                            ..Default::default()
-                        },
-                        background_color: Color::rgb(0.3, 0.3, 0.3).into(),
-                        ..Default::default()
-                    },
+                    crate::plugins::button::ButtonBundle::new(),
                     quit_button::QuitButton {},
                     Name::new("Quit Button"),
                 ))
                 .with_children(|parent| {
-                    parent.spawn(TextBundle {
-                        text: Text {
-                            alignment: TextAlignment::Center,
-                            sections: vec![TextSection::new(
-                                "Quit",
-                                TextStyle {
-                                    font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                                    font_size: 32.0,
-                                    color: Color::rgb(1.0, 1.0, 1.0),
-                                },
-                            )],
-                            ..Default::default()
-                        },
-                        ..Default::default()
-                    });
+                    parent.spawn(crate::plugins::text::TextBundle::new(&asset_server, "Quit"));
                 });
         });
 }

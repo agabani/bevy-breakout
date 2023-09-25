@@ -1,4 +1,5 @@
 pub mod bevy;
+pub mod button;
 pub mod collidable;
 pub mod destructible;
 #[cfg(feature = "dev")]
@@ -7,4 +8,5 @@ pub mod look_at;
 pub mod orbit_controller;
 pub mod physics;
 pub mod scorable;
+pub mod text;
 pub mod velocitized;

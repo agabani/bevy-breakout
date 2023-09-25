@@ -10,12 +10,9 @@ pub fn interaction(
     mut next_state: ResMut<NextState<GameState>>,
     query: Query<&Interaction, (Changed<Interaction>, With<PlayButton>)>,
 ) {
-    if let Ok(interaction) = query.get_single() {
-        match interaction {
-            Interaction::Hovered | Interaction::None => {
-                // TODO: change color
-            }
-            Interaction::Pressed => next_state.set(GameState::Level),
-        };
+    for &interaction in &query {
+        if interaction == Interaction::Pressed {
+            next_state.set(GameState::Level);
+        }
     }
 }

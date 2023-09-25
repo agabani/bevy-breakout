@@ -8,7 +8,7 @@ pub(crate) struct FocalPoint;
 fn main() {
     let mut app = App::new();
 
-    app.add_plugins((DefaultPlugins, PhysicsPlugin, OrbitControllerPlugin))
+    app.add_plugins((BevyDefaultPlugin, PhysicsPlugin, OrbitControllerPlugin))
         .add_systems(Startup, setup)
         .add_systems(Update, cursor_position);
 

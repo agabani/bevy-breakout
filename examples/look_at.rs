@@ -7,7 +7,7 @@ pub(crate) struct Actor;
 fn main() {
     let mut app = App::new();
 
-    app.add_plugins((DefaultPlugins, LookAtPlugin))
+    app.add_plugins((BevyDefaultPlugin, LookAtPlugin))
         .add_systems(Startup, setup)
         .add_systems(Update, cursor_position);
 

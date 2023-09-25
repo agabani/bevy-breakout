@@ -44,19 +44,21 @@ impl ButtonBundle {
     }
 }
 
-#[allow(clippy::needless_pass_by_value)]
-pub fn interaction(query: Query<&Interaction, (Changed<Interaction>, With<Button>)>) {
-    for interaction in &query {
+impl Default for ButtonBundle {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[allow(clippy::needless_pass_by_value, clippy::type_complexity)]
+pub fn interaction(
+    mut query: Query<(&Interaction, &mut BackgroundColor), (Changed<Interaction>, With<Button>)>,
+) {
+    for (interaction, mut background_color) in &mut query {
         match interaction {
-            Interaction::Hovered => {
-                // println!("Hovered");
-            }
-            Interaction::None => {
-                // println!("None");
-            }
-            Interaction::Pressed => {
-                // println!("Pressed");
-            }
+            Interaction::Hovered => background_color.0 = Color::rgb(0.5, 0.5, 0.5),
+            Interaction::None => background_color.0 = Color::rgb(0.3, 0.3, 0.3),
+            Interaction::Pressed => {}
         };
     }
 }

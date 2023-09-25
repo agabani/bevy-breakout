@@ -3,7 +3,8 @@ use bevy::prelude::*;
 use crate::GameState;
 
 #[derive(Component)]
-pub struct PlayButton {}
+#[cfg_attr(feature = "dev", derive(Reflect))]
+pub struct PlayButton;
 
 #[allow(clippy::needless_pass_by_value)]
 pub fn interaction(

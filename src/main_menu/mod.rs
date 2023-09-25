@@ -1,6 +1,7 @@
 mod camera;
 mod play_button;
 mod quit_button;
+mod settings_button;
 
 use bevy::prelude::*;
 
@@ -11,27 +12,32 @@ pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            OnEnter(GameState::MainMenu),
-            (camera::setup, main_menu_setup),
-        )
-        .add_systems(
-            OnExit(GameState::MainMenu),
-            (camera::teardown, main_menu_teardown),
-        )
-        .add_systems(
-            Update,
-            (play_button::interaction, quit_button::interaction)
-                .run_if(in_state(GameState::MainMenu)),
-        );
+        app.add_systems(OnEnter(GameState::MainMenu), (camera::setup, setup))
+            .add_systems(OnExit(GameState::MainMenu), (camera::teardown, teardown))
+            .add_systems(
+                Update,
+                (
+                    play_button::interaction,
+                    quit_button::interaction,
+                    settings_button::interaction,
+                )
+                    .run_if(in_state(GameState::MainMenu)),
+            );
+
+        #[cfg(feature = "dev")]
+        app.register_type::<MainMenu>()
+            .register_type::<play_button::PlayButton>()
+            .register_type::<quit_button::QuitButton>()
+            .register_type::<settings_button::SettingsButton>();
     }
 }
 
 #[derive(Component)]
-pub struct MainMenu {}
+#[cfg_attr(feature = "dev", derive(Reflect))]
+pub struct MainMenu;
 
 #[allow(clippy::needless_pass_by_value)]
-fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn((
             NodeBundle {
@@ -50,14 +56,14 @@ fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 background_color: Color::rgb(0.15, 0.15, 0.15).into(),
                 ..Default::default()
             },
-            MainMenu {},
+            MainMenu,
             Name::new("Main Menu"),
         ))
         .with_children(|parent| {
             parent
                 .spawn((
                     crate::plugins::button::ButtonBundle::new(),
-                    play_button::PlayButton {},
+                    play_button::PlayButton,
                     Name::new("Play Button"),
                 ))
                 .with_children(|parent| {
@@ -67,7 +73,20 @@ fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             parent
                 .spawn((
                     crate::plugins::button::ButtonBundle::new(),
-                    quit_button::QuitButton {},
+                    settings_button::SettingsButton,
+                    Name::new("Settings Button"),
+                ))
+                .with_children(|parent| {
+                    parent.spawn(crate::plugins::text::TextBundle::new(
+                        &asset_server,
+                        "Settings",
+                    ));
+                });
+
+            parent
+                .spawn((
+                    crate::plugins::button::ButtonBundle::new(),
+                    quit_button::QuitButton,
                     Name::new("Quit Button"),
                 ))
                 .with_children(|parent| {
@@ -77,7 +96,8 @@ fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 #[allow(clippy::needless_pass_by_value)]
-fn main_menu_teardown(mut commands: Commands, query: Query<Entity, With<MainMenu>>) {
-    let entity = query.single();
-    commands.entity(entity).despawn_recursive();
+pub fn teardown(mut commands: Commands, query: Query<Entity, With<MainMenu>>) {
+    for entity in &query {
+        commands.entity(entity).despawn_recursive();
+    }
 }

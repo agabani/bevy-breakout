@@ -1,7 +1,8 @@
 use bevy::{app::AppExit, prelude::*};
 
 #[derive(Component)]
-pub struct QuitButton {}
+#[cfg_attr(feature = "dev", derive(Reflect))]
+pub struct QuitButton;
 
 #[allow(clippy::needless_pass_by_value)]
 pub fn interaction(

@@ -1,3 +1,4 @@
+pub mod asset;
 pub mod bevy;
 pub mod button;
 pub mod collidable;

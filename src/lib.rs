@@ -6,10 +6,11 @@ pub(crate) mod math;
 pub mod plugins;
 
 use bevy::prelude::*;
+use prelude::ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD;
 
 pub mod prelude {
     pub use crate::plugins::{
-        bevy::*, button::*, collidable::*, destructible::*, license::*, look_at::*,
+        asset::*, bevy::*, button::*, collidable::*, destructible::*, license::*, look_at::*,
         orbit_controller::*, physics::*, scorable::*, text::*, velocitized::*,
     };
 
@@ -35,6 +36,7 @@ impl Plugin for GamePlugin {
 
         app.add_state::<GameState>()
             .add_plugins((
+                AssetPlugin,
                 BevyDefaultPlugin,
                 ButtonPlugin,
                 DestructiblePlugin,
@@ -50,5 +52,19 @@ impl Plugin for GamePlugin {
 
         #[cfg(feature = "dev")]
         app.add_plugins(DevPlugin);
+
+        app.add_systems(Startup, setup);
     }
+}
+
+fn setup(asset_server: Res<AssetServer>, mut commands: Commands) {
+    commands.spawn(AudioBundle {
+        source: asset_server.load(ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD.path()),
+        settings: PlaybackSettings {
+            mode: bevy::audio::PlaybackMode::Loop,
+            volume: bevy::audio::Volume::Relative(bevy::audio::VolumeLevel::new(0.3)),
+            ..default()
+        },
+        ..default()
+    });
 }

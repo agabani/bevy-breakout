@@ -35,4 +35,4 @@ jobs:
       - name: "Build"
         run: just build-wasm
       - name: Deploy
-        run: ghp-import wasm -p
+        run: ghp-import wasm --no-history --push

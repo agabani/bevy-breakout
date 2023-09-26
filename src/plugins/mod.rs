@@ -4,6 +4,7 @@ pub mod collidable;
 pub mod destructible;
 #[cfg(feature = "dev")]
 pub mod dev;
+pub mod license;
 pub mod look_at;
 pub mod orbit_controller;
 pub mod physics;

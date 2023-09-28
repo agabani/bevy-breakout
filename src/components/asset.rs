@@ -50,9 +50,28 @@ impl AssetBundle {
     }
 }
 
+pub const ASSET_FONT_FIRA_SANS_BOLD: Asset = Asset {
+    path: std::borrow::Cow::Borrowed("fonts/FiraSans-Bold.ttf"),
+};
+
+pub const ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD: Asset = Asset {
+    path: Cow::Borrowed(
+        "sounds/Of Far Different Nature - Force Field/Of Far Different Nature - Force Field (CC-BY).ogg",
+    ),
+};
+
 fn setup(mut commands: Commands) {
     commands.spawn(AssetBundle::new(
-        "Asset: Sounds: Of Far Different Nature - Force Field",
+        "Asset: Font: FiraSans-Bold",
+        ASSET_FONT_FIRA_SANS_BOLD,
+        License::new(
+            Cow::Borrowed("SIL OPEN FONT LICENSE Version 1.1"),
+            Cow::Borrowed("Font: FiraSans-Bold"),
+        ),
+    ));
+
+    commands.spawn(AssetBundle::new(
+        "Asset: Sound: Of Far Different Nature - Force Field",
         ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD,
         License::new(
             Cow::Borrowed("Creative Commons Attribution 4.0 International Public License"),
@@ -60,9 +79,3 @@ fn setup(mut commands: Commands) {
         )
     ));
 }
-
-pub const ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD: Asset = Asset {
-    path: Cow::Borrowed(
-        "sounds/Of Far Different Nature - Force Field/Of Far Different Nature - Force Field (CC-BY).ogg",
-    ),
-};

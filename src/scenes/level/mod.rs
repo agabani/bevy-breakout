@@ -8,14 +8,14 @@ pub(crate) mod scoreboard;
 
 use bevy::prelude::*;
 
-use crate::{prelude::*, GameState};
+use crate::{prelude::*, scenes::SceneState};
 
 pub(crate) struct LevelPlugin;
 
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            OnEnter(GameState::Level),
+            OnEnter(SceneState::Level),
             (
                 ball::setup,
                 brick::setup,
@@ -27,7 +27,7 @@ impl Plugin for LevelPlugin {
             ),
         )
         .add_systems(
-            OnExit(GameState::Level),
+            OnExit(SceneState::Level),
             (
                 ball::teardown,
                 brick::teardown,
@@ -39,7 +39,7 @@ impl Plugin for LevelPlugin {
         )
         .add_systems(
             Update,
-            (menu::escape, scoreboard::update).run_if(in_state(GameState::Level)),
+            (menu::escape, scoreboard::update).run_if(in_state(SceneState::Level)),
         );
     }
 }

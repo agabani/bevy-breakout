@@ -5,15 +5,15 @@ mod settings_button;
 
 use bevy::prelude::*;
 
-use crate::GameState;
+use crate::scenes::SceneState;
 
 #[allow(clippy::module_name_repetitions)]
 pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::MainMenu), (camera::setup, setup))
-            .add_systems(OnExit(GameState::MainMenu), (camera::teardown, teardown))
+        app.add_systems(OnEnter(SceneState::MainMenu), (camera::setup, setup))
+            .add_systems(OnExit(SceneState::MainMenu), (camera::teardown, teardown))
             .add_systems(
                 Update,
                 (
@@ -21,7 +21,7 @@ impl Plugin for MainMenuPlugin {
                     quit_button::interaction,
                     settings_button::interaction,
                 )
-                    .run_if(in_state(GameState::MainMenu)),
+                    .run_if(in_state(SceneState::MainMenu)),
             );
 
         #[cfg(feature = "dev")]
@@ -62,22 +62,25 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         .with_children(|parent| {
             parent
                 .spawn((
-                    crate::plugins::button::ButtonBundle::new(),
+                    crate::components::button::ButtonBundle::new(),
                     play_button::PlayButton,
                     Name::new("Play Button"),
                 ))
                 .with_children(|parent| {
-                    parent.spawn(crate::plugins::text::TextBundle::new(&asset_server, "Play"));
+                    parent.spawn(crate::components::text::TextBundle::new(
+                        &asset_server,
+                        "Play",
+                    ));
                 });
 
             parent
                 .spawn((
-                    crate::plugins::button::ButtonBundle::new(),
+                    crate::components::button::ButtonBundle::new(),
                     settings_button::SettingsButton,
                     Name::new("Settings Button"),
                 ))
                 .with_children(|parent| {
-                    parent.spawn(crate::plugins::text::TextBundle::new(
+                    parent.spawn(crate::components::text::TextBundle::new(
                         &asset_server,
                         "Settings",
                     ));
@@ -85,12 +88,15 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
             parent
                 .spawn((
-                    crate::plugins::button::ButtonBundle::new(),
+                    crate::components::button::ButtonBundle::new(),
                     quit_button::QuitButton,
                     Name::new("Quit Button"),
                 ))
                 .with_children(|parent| {
-                    parent.spawn(crate::plugins::text::TextBundle::new(&asset_server, "Quit"));
+                    parent.spawn(crate::components::text::TextBundle::new(
+                        &asset_server,
+                        "Quit",
+                    ));
                 });
         });
 }

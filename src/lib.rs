@@ -1,54 +1,28 @@
 #![warn(clippy::pedantic)]
 
-pub(crate) mod level;
-pub(crate) mod main_menu;
+pub mod bevy_config;
+pub mod components;
+#[cfg(feature = "dev")]
+pub mod dev;
 pub(crate) mod math;
-pub mod plugins;
+pub mod physics;
+pub mod prelude;
+pub mod scenes;
 
 use bevy::prelude::*;
-use prelude::ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD;
 
-pub mod prelude {
-    pub use crate::plugins::{
-        asset::*, bevy::*, button::*, collidable::*, destructible::*, license::*, look_at::*,
-        orbit_controller::*, physics::*, scorable::*, text::*, velocitized::*,
-    };
-
-    #[cfg(feature = "dev")]
-    pub use crate::plugins::dev::*;
-}
-
-#[derive(Clone, Default, Debug, Eq, PartialEq, Hash, States)]
-pub enum GameState {
-    #[default]
-    MainMenu,
-    Level,
-}
+use crate::{prelude::*, scenes::ScenesPlugin};
 
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        use crate::prelude::*;
-
-        use level::LevelPlugin;
-        use main_menu::MainMenuPlugin;
-
-        app.add_state::<GameState>()
-            .add_plugins((
-                AssetPlugin,
-                BevyDefaultPlugin,
-                ButtonPlugin,
-                DestructiblePlugin,
-                LicensePlugin,
-                LookAtPlugin,
-                OrbitControllerPlugin,
-                PhysicsPlugin,
-                ScorablePlugin,
-                TextPlugin,
-                VelocitizedPlugin,
-            ))
-            .add_plugins((LevelPlugin, MainMenuPlugin));
+        app.add_plugins((
+            BevyDefaultPlugin,
+            ComponentsPlugin,
+            PhysicsPlugin,
+            ScenesPlugin,
+        ));
 
         #[cfg(feature = "dev")]
         app.add_plugins(DevPlugin);

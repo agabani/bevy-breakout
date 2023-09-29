@@ -20,8 +20,10 @@ impl Plugin for ScenesPlugin {
 
 #[derive(Clone, Copy, Default, Debug, Eq, PartialEq, Hash, States)]
 pub enum SceneState {
+    Credits,
     Level,
     MainMenu,
+    Settings,
     #[default]
     Title,
 }

@@ -15,7 +15,13 @@ impl Plugin for MainMenuPlugin {
             .add_systems(OnExit(state), (despawn::<Camera>, despawn::<MainMenu>))
             .add_systems(
                 Update,
-                (on_play_button_clicked, on_quit_button_clicked).run_if(in_state(state)),
+                (
+                    on_click_next_state::<CreditsButton>(SceneState::Credits),
+                    on_click_next_state::<PlayButton>(SceneState::Level),
+                    on_click_next_state::<SettingsButton>(SceneState::Settings),
+                    on_click_quit,
+                )
+                    .run_if(in_state(state)),
             );
 
         #[cfg(feature = "dev")]
@@ -56,6 +62,30 @@ struct SettingsButton;
 fn despawn<T: Component>(mut commands: Commands, query: Query<Entity, With<T>>) {
     for entity in &query {
         commands.entity(entity).despawn_recursive();
+    }
+}
+
+fn on_click_next_state<T: Component>(
+    scene_state: SceneState,
+) -> impl Fn(ResMut<NextState<SceneState>>, Query<&Interaction, (Changed<Interaction>, With<T>)>) {
+    move |mut next_state, query| {
+        for &interaction in &query {
+            if interaction == Interaction::Pressed {
+                next_state.set(scene_state);
+            }
+        }
+    }
+}
+
+#[allow(clippy::needless_pass_by_value)]
+fn on_click_quit(
+    mut event: EventWriter<AppExit>,
+    query: Query<&Interaction, (Changed<Interaction>, With<QuitButton>)>,
+) {
+    for &interaction in &query {
+        if interaction == Interaction::Pressed {
+            event.send(AppExit);
+        }
     }
 }
 
@@ -160,142 +190,73 @@ fn spawn_title(mut commands: Commands, asset_server: Res<AssetServer>) {
                             ..Default::default()
                         })
                         .with_children(|parent| {
-                            parent
-                                .spawn((
-                                    Name::new("Play"),
-                                    PlayButton,
-                                    ButtonBundle {
-                                        background_color: Color::WHITE.with_a(0.0).into(),
-                                        ..Default::default()
-                                    },
-                                ))
-                                .with_children(|parent| {
-                                    parent.spawn(TextBundle {
-                                        text: Text {
-                                            alignment: TextAlignment::Left,
-                                            sections: vec![TextSection {
-                                                style: TextStyle {
-                                                    color: Color::rgb(1.0, 1.0, 1.0),
-                                                    font: asset_server
-                                                        .load(ASSET_FONT_FIRA_SANS_BOLD.path()),
-                                                    font_size: 36.0,
-                                                },
-                                                value: "PLAY".to_string(),
-                                            }],
-                                            ..Default::default()
-                                        },
-                                        ..Default::default()
-                                    });
-                                });
+                            template_spawn_button(
+                                parent,
+                                &asset_server,
+                                "Play",
+                                "PLAY".to_string(),
+                                PlayButton,
+                            );
 
-                            parent
-                                .spawn((
-                                    Name::new("Settings"),
-                                    SettingsButton,
-                                    ButtonBundle {
-                                        background_color: Color::WHITE.with_a(0.0).into(),
-                                        ..Default::default()
-                                    },
-                                ))
-                                .with_children(|parent| {
-                                    parent.spawn(TextBundle {
-                                        text: Text {
-                                            alignment: TextAlignment::Left,
-                                            sections: vec![TextSection {
-                                                style: TextStyle {
-                                                    color: Color::rgb(1.0, 1.0, 1.0),
-                                                    font: asset_server
-                                                        .load(ASSET_FONT_FIRA_SANS_BOLD.path()),
-                                                    font_size: 36.0,
-                                                },
-                                                value: "SETTINGS".to_string(),
-                                            }],
-                                            ..Default::default()
-                                        },
-                                        ..Default::default()
-                                    });
-                                });
+                            template_spawn_button(
+                                parent,
+                                &asset_server,
+                                "Settings",
+                                "SETTINGS".to_string(),
+                                SettingsButton,
+                            );
 
-                            parent
-                                .spawn((
-                                    Name::new("Credits"),
-                                    CreditsButton,
-                                    ButtonBundle {
-                                        background_color: Color::WHITE.with_a(0.0).into(),
-                                        ..Default::default()
-                                    },
-                                ))
-                                .with_children(|parent| {
-                                    parent.spawn(TextBundle {
-                                        text: Text {
-                                            alignment: TextAlignment::Left,
-                                            sections: vec![TextSection {
-                                                style: TextStyle {
-                                                    color: Color::rgb(1.0, 1.0, 1.0),
-                                                    font: asset_server
-                                                        .load(ASSET_FONT_FIRA_SANS_BOLD.path()),
-                                                    font_size: 36.0,
-                                                },
-                                                value: "CREDITS".to_string(),
-                                            }],
-                                            ..Default::default()
-                                        },
-                                        ..Default::default()
-                                    });
-                                });
+                            template_spawn_button(
+                                parent,
+                                &asset_server,
+                                "Credits",
+                                "CREDITS".to_string(),
+                                CreditsButton,
+                            );
 
-                            parent
-                                .spawn((
-                                    Name::new("Quit"),
-                                    QuitButton,
-                                    ButtonBundle {
-                                        background_color: Color::WHITE.with_a(0.0).into(),
-                                        ..Default::default()
-                                    },
-                                ))
-                                .with_children(|parent| {
-                                    parent.spawn(TextBundle {
-                                        text: Text {
-                                            alignment: TextAlignment::Left,
-                                            sections: vec![TextSection {
-                                                style: TextStyle {
-                                                    color: Color::rgb(1.0, 1.0, 1.0),
-                                                    font: asset_server
-                                                        .load(ASSET_FONT_FIRA_SANS_BOLD.path()),
-                                                    font_size: 36.0,
-                                                },
-                                                value: "QUIT".to_string(),
-                                            }],
-                                            ..Default::default()
-                                        },
-                                        ..Default::default()
-                                    });
-                                });
+                            template_spawn_button(
+                                parent,
+                                &asset_server,
+                                "Quit",
+                                "QUIT".to_string(),
+                                QuitButton,
+                            );
                         });
                 });
         });
 }
 
-#[allow(clippy::needless_pass_by_value)]
-fn on_play_button_clicked(
-    mut next_state: ResMut<NextState<SceneState>>,
-    query: Query<&Interaction, (Changed<Interaction>, With<PlayButton>)>,
+fn template_spawn_button(
+    parent: &mut ChildBuilder,
+    asset_server: &Res<AssetServer>,
+    name: impl Into<std::borrow::Cow<'static, str>>,
+    value: String,
+    component: impl Component,
 ) {
-    for &interaction in &query {
-        if interaction == Interaction::Pressed {
-            next_state.set(SceneState::Level);
-        }
-    }
-}
-
-#[allow(clippy::needless_pass_by_value)]
-fn on_quit_button_clicked(
-    mut event: EventWriter<AppExit>,
-    query: Query<&Interaction, (Changed<Interaction>, With<QuitButton>)>,
-) {
-    for &interaction in &query {
-        if interaction == Interaction::Pressed {
-            event.send(AppExit);
-        }
-    }
+    parent
+        .spawn((
+            Name::new(name),
+            component,
+            ButtonBundle {
+                background_color: Color::WHITE.with_a(0.0).into(),
+                ..Default::default()
+            },
+        ))
+        .with_children(|parent| {
+            parent.spawn(TextBundle {
+                text: Text {
+                    alignment: TextAlignment::Left,
+                    sections: vec![TextSection {
+                        style: TextStyle {
+                            color: Color::rgb(1.0, 1.0, 1.0),
+                            font: asset_server.load(ASSET_FONT_FIRA_SANS_BOLD.path()),
+                            font_size: 36.0,
+                        },
+                        value,
+                    }],
+                    ..Default::default()
+                },
+                ..Default::default()
+            });
+        });
 }

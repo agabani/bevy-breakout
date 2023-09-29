@@ -31,7 +31,8 @@ impl Plugin for GamePlugin {
     }
 }
 
-fn setup(asset_server: Res<AssetServer>, mut commands: Commands) {
+#[allow(clippy::needless_pass_by_value)]
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(AudioBundle {
         source: asset_server.load(ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD.path()),
         settings: PlaybackSettings {
@@ -39,6 +40,5 @@ fn setup(asset_server: Res<AssetServer>, mut commands: Commands) {
             volume: bevy::audio::Volume::Relative(bevy::audio::VolumeLevel::new(0.3)),
             ..default()
         },
-        ..default()
     });
 }

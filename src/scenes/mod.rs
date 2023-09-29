@@ -1,3 +1,4 @@
+pub mod credits;
 pub mod level;
 pub mod main_menu;
 pub mod title;
@@ -11,6 +12,7 @@ impl Plugin for ScenesPlugin {
     #[allow(unused_variables)]
     fn build(&self, app: &mut App) {
         app.add_state::<SceneState>().add_plugins((
+            credits::CreditsPlugin,
             level::LevelPlugin,
             main_menu::MainMenuPlugin,
             title::TitlePlugin,

@@ -20,7 +20,18 @@ pub struct License<'a> {
 }
 
 impl<'a> License<'a> {
+    #[must_use]
     pub fn new(name: Cow<'a, str>, text: Cow<'a, str>) -> Self {
         Self { name, text }
+    }
+
+    #[must_use]
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    #[must_use]
+    pub fn text(&self) -> &str {
+        &self.text
     }
 }

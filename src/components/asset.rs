@@ -23,6 +23,7 @@ pub struct Asset<'a> {
 }
 
 impl<'a> Asset<'a> {
+    #[must_use]
     pub fn path(&'a self) -> &'a str {
         &self.path
     }

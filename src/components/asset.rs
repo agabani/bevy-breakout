@@ -55,6 +55,12 @@ pub const ASSET_FONT_FIRA_SANS_BOLD: Asset = Asset {
     path: std::borrow::Cow::Borrowed("fonts/FiraSans-Bold.ttf"),
 };
 
+pub const ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_ETHNIC_BEAT: Asset = Asset {
+    path: Cow::Borrowed(
+        "sounds/Of Far Different Nature - Ethnic Beat/Of Far Different Nature - Ethnic Beat (CC-BY).ogg",
+    ),
+};
+
 pub const ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD: Asset = Asset {
     path: Cow::Borrowed(
         "sounds/Of Far Different Nature - Force Field/Of Far Different Nature - Force Field (CC-BY).ogg",
@@ -69,6 +75,15 @@ fn setup(mut commands: Commands) {
             Cow::Borrowed("SIL OPEN FONT LICENSE Version 1.1"),
             Cow::Borrowed("Font: FiraSans-Bold"),
         ),
+    ));
+
+    commands.spawn(AssetBundle::new(
+        "Asset: Sound: Of Far Different Nature - Ethnic Beat",
+        ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_ETHNIC_BEAT,
+        License::new(
+            Cow::Borrowed("Creative Commons Attribution 4.0 International Public License"),
+            Cow::Borrowed("Music: 'Ethnic Beat' by Of Far Different Nature (https://fardifferent.bandcamp.com/)"),
+        )
     ));
 
     commands.spawn(AssetBundle::new(

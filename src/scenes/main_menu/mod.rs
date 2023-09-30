@@ -214,6 +214,7 @@ fn spawn_title(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 CreditsButton,
                             );
 
+                            #[cfg(not(target_family = "wasm"))]
                             template_spawn_button(
                                 parent,
                                 &asset_server,

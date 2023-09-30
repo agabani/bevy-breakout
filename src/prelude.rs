@@ -5,6 +5,7 @@ pub use crate::{
         orbit_controller::*, scorable::*, text::*, velocitized::*, *,
     },
     physics::*,
+    subsystems::{background_music, *},
 };
 
 #[cfg(feature = "dev")]

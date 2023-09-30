@@ -23,6 +23,7 @@ impl Plugin for LevelPlugin {
                 map::setup,
                 paddle::setup,
                 scoreboard::setup,
+                change_background_music,
                 reset_score,
             ),
         )
@@ -46,4 +47,10 @@ impl Plugin for LevelPlugin {
 
 fn reset_score(mut resource: ResMut<Score>) {
     resource.reset();
+}
+
+fn change_background_music(mut play: EventWriter<background_music::PlayEvent>) {
+    play.send(background_music::PlayEvent::new(
+        ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD.path(),
+    ));
 }

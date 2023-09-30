@@ -14,17 +14,20 @@ impl Plugin for TitlePlugin {
     fn build(&self, app: &mut App) {
         let state = SceneState::Title;
 
-        app.add_systems(OnEnter(state), (spawn_camera, spawn_title))
-            .add_systems(OnExit(state), (despawn::<Camera>, despawn::<Title>))
-            .add_systems(
-                Update,
-                (
-                    interaction::<KeyboardInput>,
-                    interaction::<MouseButtonInput>,
-                    interaction::<TouchInput>,
-                )
-                    .run_if(in_state(state)),
-            );
+        app.add_systems(
+            OnEnter(state),
+            (change_background_music, spawn_camera, spawn_title),
+        )
+        .add_systems(OnExit(state), (despawn::<Camera>, despawn::<Title>))
+        .add_systems(
+            Update,
+            (
+                interaction::<KeyboardInput>,
+                interaction::<MouseButtonInput>,
+                interaction::<TouchInput>,
+            )
+                .run_if(in_state(state)),
+        );
 
         #[cfg(feature = "dev")]
         app.register_type::<Camera>().register_type::<Title>();
@@ -38,6 +41,12 @@ struct Camera;
 #[derive(Component)]
 #[cfg_attr(feature = "dev", derive(Reflect))]
 struct Title;
+
+fn change_background_music(mut play: EventWriter<background_music::PlayEvent>) {
+    play.send(background_music::PlayEvent::new(
+        ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_HEY.path(),
+    ));
+}
 
 #[allow(clippy::needless_pass_by_value)]
 fn despawn<T: Component>(mut commands: Commands, query: Query<Entity, With<T>>) {

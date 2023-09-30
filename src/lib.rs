@@ -8,6 +8,7 @@ pub(crate) mod math;
 pub mod physics;
 pub mod prelude;
 pub mod scenes;
+pub mod subsystems;
 
 use bevy::prelude::*;
 
@@ -22,23 +23,10 @@ impl Plugin for GamePlugin {
             ComponentsPlugin,
             PhysicsPlugin,
             ScenesPlugin,
+            SubsystemsPlugin,
         ));
 
         #[cfg(feature = "dev")]
         app.add_plugins(DevPlugin);
-
-        app.add_systems(Startup, setup);
     }
-}
-
-#[allow(clippy::needless_pass_by_value)]
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(AudioBundle {
-        source: asset_server.load(ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD.path()),
-        settings: PlaybackSettings {
-            mode: bevy::audio::PlaybackMode::Loop,
-            volume: bevy::audio::Volume::Relative(bevy::audio::VolumeLevel::new(0.3)),
-            ..default()
-        },
-    });
 }

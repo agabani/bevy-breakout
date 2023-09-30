@@ -67,6 +67,12 @@ pub const ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_FORCE_FIELD: Asset = Asset {
     ),
 };
 
+pub const ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_HEY: Asset = Asset {
+    path: Cow::Borrowed(
+        "sounds/Of Far Different Nature - HEY/Of Far Different Nature - HEY (CC-BY).ogg",
+    ),
+};
+
 fn setup(mut commands: Commands) {
     commands.spawn(AssetBundle::new(
         "Asset: Font: FiraSans-Bold",
@@ -93,5 +99,16 @@ fn setup(mut commands: Commands) {
             Cow::Borrowed("Creative Commons Attribution 4.0 International Public License"),
             Cow::Borrowed("Music: 'Force Field' by Of Far Different Nature (https://fardifferent.bandcamp.com/)"),
         )
+    ));
+
+    commands.spawn(AssetBundle::new(
+        "Asset: Sound: Of Far Different Nature - HEY",
+        ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_HEY,
+        License::new(
+            Cow::Borrowed("Creative Commons Attribution 4.0 International Public License"),
+            Cow::Borrowed(
+                "Music: 'HEY' by Of Far Different Nature (https://fardifferent.bandcamp.com/)",
+            ),
+        ),
     ));
 }

@@ -11,18 +11,21 @@ impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         let state = SceneState::MainMenu;
 
-        app.add_systems(OnEnter(state), (spawn_camera, spawn_title))
-            .add_systems(OnExit(state), (despawn::<Camera>, despawn::<MainMenu>))
-            .add_systems(
-                Update,
-                (
-                    on_click_next_state::<CreditsButton>(SceneState::Credits),
-                    on_click_next_state::<PlayButton>(SceneState::Level),
-                    on_click_next_state::<SettingsButton>(SceneState::Settings),
-                    on_click_quit,
-                )
-                    .run_if(in_state(state)),
-            );
+        app.add_systems(
+            OnEnter(state),
+            (change_background_music, spawn_camera, spawn_title),
+        )
+        .add_systems(OnExit(state), (despawn::<Camera>, despawn::<MainMenu>))
+        .add_systems(
+            Update,
+            (
+                on_click_next_state::<CreditsButton>(SceneState::Credits),
+                on_click_next_state::<PlayButton>(SceneState::Level),
+                on_click_next_state::<SettingsButton>(SceneState::Settings),
+                on_click_quit,
+            )
+                .run_if(in_state(state)),
+        );
 
         #[cfg(feature = "dev")]
         app.register_type::<Camera>()
@@ -57,6 +60,12 @@ struct QuitButton;
 #[derive(Component)]
 #[cfg_attr(feature = "dev", derive(Reflect))]
 struct SettingsButton;
+
+fn change_background_music(mut play: EventWriter<background_music::PlayEvent>) {
+    play.send(background_music::PlayEvent::new(
+        ASSET_SOUND_OF_FAR_DIFFERENT_NATURE_ETHNIC_BEAT.path(),
+    ));
+}
 
 #[allow(clippy::needless_pass_by_value)]
 fn despawn<T: Component>(mut commands: Commands, query: Query<Entity, With<T>>) {
